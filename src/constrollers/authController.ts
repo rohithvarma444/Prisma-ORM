@@ -5,11 +5,11 @@ import { hashPassword,comparePassword,generateToken } from '../utils/authHelper'
 
 export const register = async(req: Request,res: Response): Promise<Response> => {
     
-    const { name, firstName, lastName, email,password } = req.body;
-
+    const {name,firstName, lastName, email,password } = req.body;
+    console.log(name," ",email," ",password);
     try {
         const userDetails = await prisma.user.findUnique({
-            where: { email: email } 
+            where: { email }
         });
 
         if (userDetails) {
@@ -45,7 +45,7 @@ export const signin = async(req: Request, res: Response) => {
 
     try {
         const userDetails = await prisma.user.findUnique({
-            where: {email}
+            where: { email }
         });
 
         if(!userDetails){
@@ -63,7 +63,7 @@ export const signin = async(req: Request, res: Response) => {
             })
         }
 
-        const token = await generateToken(userDetails.id);
+        const token = await generateToken(userDetails.id.toString());
         return res.status(200).json({
             success: true,
             message: "User logged in successfully",
